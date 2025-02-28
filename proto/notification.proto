@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package notification;
+
+// TODO: revisar los metodos necesarios
+service NotificationService {
+  rpc SendNotification (NotificationRequest) returns (NotificationResponse);
+}
+
+message NotificationRequest {
+  string idUser = 1;
+  string message = 2;
+}
+
+message NotificationResponse {
+  bool success = 1;
+}
