@@ -1,4 +1,3 @@
-import { Controller } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
 
 interface NotificationRequest {
@@ -8,19 +7,20 @@ interface NotificationRequest {
 
 interface NotificationResponse {
   success: boolean;
+  message: string;
 }
 
-@Controller()
 export class NotificationService {
   @GrpcMethod('NotificationService', 'SendNotification')
   sendNotification({
     idUser = '',
     message = '',
   }: NotificationRequest): NotificationResponse {
-    console.log(`Notification sent to user ${idUser}: ${message}`);
+    const messageFormatted = `Notification sent to user ${idUser}: ${message}`;
 
     return {
       success: true,
+      message: messageFormatted,
     };
   }
 }
