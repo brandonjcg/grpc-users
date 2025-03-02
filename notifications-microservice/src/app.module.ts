@@ -10,6 +10,7 @@ import { NotificationModule } from './notification/notification.module';
         name: 'NOTIFICATION_PACKAGE',
         transport: Transport.GRPC,
         options: {
+          url: 'localhost:50052',
           package: 'notification',
           protoPath: join(__dirname, '../../proto/notification.proto'),
         },

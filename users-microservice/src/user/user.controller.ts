@@ -1,7 +1,7 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
+import { firstValueFrom } from 'rxjs';
 import { UserService } from './user.service';
-import { Observable } from 'rxjs';
 import {
   NotificationRequest,
   NotificationResponse,
@@ -29,11 +29,19 @@ export class UserController {
   }
 
   @Get(':id/notify')
-  notifyUser(@Param('id') id: string): Observable<NotificationResponse> {
+  async notifyUser(
+    @Param('id') id: string,
+    @Query('message') message: string,
+  ): Promise<NotificationResponse> {
     const notificationRequest: NotificationRequest = {
       id,
-      message: 'This is a notification message',
+      message,
     };
-    return this.userService.sendNotification(notificationRequest);
+
+    const response = await firstValueFrom(
+      this.userService.sendNotification({ ...notificationRequest }),
+    );
+
+    return response;
   }
 }
