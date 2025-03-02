@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { Transport, ClientsModule } from '@nestjs/microservices';
-import { NotificationService } from './app.service';
 import { join } from 'path';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -15,7 +15,7 @@ import { join } from 'path';
         },
       },
     ]),
+    NotificationModule,
   ],
-  controllers: [NotificationService],
 })
 export class AppModule {}
