@@ -1,32 +1,30 @@
-import { Injectable } from '@nestjs/common';
-// import { CreateUserDto } from './dto/create-user.dto';
-// import { UpdateUserDto } from './dto/update-user.dto';
+import { Inject, Injectable } from '@nestjs/common';
+import { ClientGrpc } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
+import {
+  NotificationRequest,
+  NotificationResponse,
+} from './interfaces/notification.interface';
 import { users } from './data';
 import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
-  // create(createUserDto: CreateUserDto) {
-  //   return 'This action adds a new user';
-  // }
+  private notificationService: any;
 
-  // findAll() {
-  //   return `This action returns all user`;
-  // }
+  constructor(@Inject('NOTIFICATION_PACKAGE') private client: ClientGrpc) {}
+
+  onModuleInit() {
+    this.notificationService = this.client.getService('NotificationService');
+  }
+
+  sendNotification(
+    notificationRequest: NotificationRequest,
+  ): Observable<NotificationResponse> {
+    return this.notificationService.SendNotification(notificationRequest);
+  }
 
   getById(idUser: string): User | null {
     return users.find((user) => user.id === idUser) || null;
   }
-
-  // findOne(id: number) {
-  //   return `This action returns a #${id} user`;
-  // }
-
-  // update(id: number, updateUserDto: UpdateUserDto) {
-  //   return `This action updates a #${id} user`;
-  // }
-
-  // remove(id: number) {
-  //   return `This action removes a #${id} user`;
-  // }
 }

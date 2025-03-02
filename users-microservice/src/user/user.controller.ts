@@ -1,8 +1,13 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
 import { UserService } from './user.service';
+import { Observable } from 'rxjs';
+import {
+  NotificationRequest,
+  NotificationResponse,
+} from './interfaces/notification.interface';
 
-@Controller()
+@Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -21,5 +26,14 @@ export class UserController {
       message: `User with id ${data.id} found`,
       user,
     };
+  }
+
+  @Get(':id/notify')
+  notifyUser(@Param('id') id: string): Observable<NotificationResponse> {
+    const notificationRequest: NotificationRequest = {
+      id,
+      message: 'This is a notification message',
+    };
+    return this.userService.sendNotification(notificationRequest);
   }
 }
