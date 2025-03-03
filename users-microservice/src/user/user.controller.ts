@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { UserService } from './user.service';
@@ -6,6 +6,7 @@ import {
   NotificationRequest,
   NotificationResponse,
 } from './interfaces/notification.interface';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Controller('user')
 export class UserController {
@@ -43,5 +44,10 @@ export class UserController {
     );
 
     return response;
+  }
+
+  @Post()
+  createUser(@Body() createUserDto: CreateUserDto) {
+    return this.userService.createUser(createUserDto);
   }
 }

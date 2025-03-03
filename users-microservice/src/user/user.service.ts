@@ -1,12 +1,13 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
-import { Observable } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import {
   NotificationRequest,
   NotificationResponse,
 } from './interfaces/notification.interface';
 import { users } from './data';
 import { User } from './entities/user.entity';
+import { CreateUserDto } from './dto/create-user.dto';
 
 interface NotificationService {
   sendNotification(data: NotificationRequest): Observable<NotificationResponse>;
@@ -32,5 +33,23 @@ export class UserService implements OnModuleInit {
 
   getById(idUser: string): User | null {
     return users.find((user) => user.id === idUser) || null;
+  }
+
+  async createUser(createUserDto: CreateUserDto) {
+    const newUser: User = {
+      id: (users.length + 1).toString(),
+      ...createUserDto,
+    };
+
+    users.push(newUser);
+
+    const response = await firstValueFrom(
+      this.notificationService.sendNotification({
+        id: newUser.id,
+        message: `User ${newUser.name} created with success`,
+      }),
+    );
+
+    return response;
   }
 }
