@@ -11,14 +11,16 @@ export class NotificationController {
 
   @GrpcMethod('NotificationService', 'SendNotification')
   sendNotification({
-    id = '',
     message = '',
   }: NotificationRequest): NotificationResponse {
-    const messageFormatted = `Notification sent to user ${id}: ${message}`;
-
+    console.log(
+      `🚀 ${new Date().toLocaleString('en-US', { timeZone: 'America/Tijuana', hour12: false })} ~ notification.controller.ts:19 ~ NotificationController ~ messageFormatted:`,
+      message,
+    );
+    // TODO: creo que aquí falta consultar el micro de user para obtener la info del usuario
     return {
       success: true,
-      message: messageFormatted,
+      message,
     };
   }
 }
