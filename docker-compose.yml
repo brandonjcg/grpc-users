@@ -15,3 +15,4 @@ services:
     container_name: "notification-service"
     ports:
       - "50052:50052"
+# TODO: crear una env y pasar a través de los micros

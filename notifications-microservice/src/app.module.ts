@@ -3,11 +3,6 @@ import { ConfigModule } from '@nestjs/config';
 import { NotificationModule } from './notification/notification.module';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
-    NotificationModule,
-  ],
+  imports: [ConfigModule.forRoot(), NotificationModule],
 })
 export class AppModule {}

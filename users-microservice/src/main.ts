@@ -28,7 +28,7 @@ async function bootstrap() {
     options: {
       package: 'user',
       protoPath: join(__dirname, '../../proto/user.proto'),
-      url: '0.0.0.0:50051',
+      url: `${process.env.NODE_ENV === 'development' ? 'localhost' : 'user-service'}:50051`,
     },
   });
 

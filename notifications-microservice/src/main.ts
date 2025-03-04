@@ -4,6 +4,7 @@ import { join } from 'path';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
+  // TODO: falta actualizar esto
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
     {
@@ -11,7 +12,7 @@ async function bootstrap() {
       options: {
         package: 'notification',
         protoPath: join(__dirname, '../../proto/notification.proto'),
-        url: '0.0.0.0:50052',
+        url: `${process.env.NODE_ENV === 'development' ? 'localhost' : 'notification-service'}:50052`,
       },
     },
   );
