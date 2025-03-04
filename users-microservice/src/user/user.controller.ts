@@ -7,7 +7,9 @@ import {
   NotificationResponse,
 } from './interfaces/notification.interface';
 import { CreateUserDto } from './dto/create-user.dto';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('User')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -29,6 +31,15 @@ export class UserController {
     };
   }
 
+  @ApiOperation({
+    summary: 'Notify a user',
+    description:
+      'Send a notification to a user through notification microservice',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Notification sent successfully',
+  })
   @Get(':id/notify')
   async notifyUser(
     @Param('id') id: string,
@@ -46,6 +57,8 @@ export class UserController {
     return response;
   }
 
+  @ApiOperation({ summary: 'Create a new user' })
+  @ApiResponse({ status: 201, description: 'User created successfully' })
   @Post()
   createUser(@Body() createUserDto: CreateUserDto) {
     return this.userService.createUser(createUserDto);
