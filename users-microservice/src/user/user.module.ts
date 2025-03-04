@@ -11,7 +11,7 @@ import { join } from 'path';
         name: 'NOTIFICATION_PACKAGE',
         transport: Transport.GRPC,
         options: {
-          url: 'localhost:50052',
+          url: '0.0.0.0:50052',
           package: 'notification',
           protoPath: join(__dirname, '../../../proto/notification.proto'),
         },

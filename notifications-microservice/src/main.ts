@@ -11,7 +11,7 @@ async function bootstrap() {
       options: {
         package: 'notification',
         protoPath: join(__dirname, '../../proto/notification.proto'),
-        url: 'localhost:50052',
+        url: '0.0.0.0:50052',
       },
     },
   );

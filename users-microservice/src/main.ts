@@ -28,7 +28,7 @@ async function bootstrap() {
     options: {
       package: 'user',
       protoPath: join(__dirname, '../../proto/user.proto'),
-      url: 'localhost:50051',
+      url: '0.0.0.0:50051',
     },
   });
 
@@ -44,7 +44,7 @@ async function bootstrap() {
   await app
     .listen(3000)
     .then(() => {
-      console.log(`HTTP server is running on http://localhost:3000 🚀`);
+      console.log(`HTTP server is running on http://0.0.0.0:3000 🚀`);
     })
     .catch((err) => {
       console.error('Error starting the app:', err);

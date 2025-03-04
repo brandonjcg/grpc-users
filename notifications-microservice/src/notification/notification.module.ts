@@ -13,7 +13,7 @@ import { NotificationController } from './notification.controller';
         name: 'NOTIFICATION_PACKAGE',
         transport: Transport.GRPC,
         options: {
-          url: 'localhost:50052',
+          url: '0.0.0.0:50052',
           package: 'notification',
           protoPath: join(__dirname, '../../../proto/notification.proto'),
         },
@@ -22,7 +22,7 @@ import { NotificationController } from './notification.controller';
         name: 'USER_PACKAGE',
         transport: Transport.GRPC,
         options: {
-          url: 'localhost:50051',
+          url: '0.0.0.0:50051',
           package: 'user',
           protoPath: join(__dirname, '../../../proto/user.proto'),
         },
