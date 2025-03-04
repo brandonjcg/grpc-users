@@ -13,7 +13,7 @@ async function bootstrap() {
     options: {
       package: 'notification',
       protoPath: join(__dirname, '../../proto/notification.proto'),
-      url: `${configService.get<string>('NODE_ENV') === 'development' ? 'localhost' : 'notification-service'}:50052`,
+      url: `${configService.get<string>('NODE_ENV') === 'development' ? 'localhost' : configService.get<string>('HOSTNAME_NOTIFICATION_SERVICE')}:50052`,
     },
   };
 

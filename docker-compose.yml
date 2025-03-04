@@ -7,6 +7,9 @@ services:
     ports:
       - "3000:3000"
       - "50051:50051"
+    environment:
+      - HOSTNAME_USER_SERVICE=user-service
+      - HOSTNAME_NOTIFICATION_SERVICE=notification-service
 
   notification-service:
     build:
@@ -15,4 +18,6 @@ services:
     container_name: "notification-service"
     ports:
       - "50052:50052"
-# TODO: crear una env y pasar a través de los micros
+    environment:
+      - HOSTNAME_NOTIFICATION_SERVICE=notification-service
+      - HOSTNAME_USER_SERVICE=user-service

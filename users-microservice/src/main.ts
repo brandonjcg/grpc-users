@@ -31,7 +31,7 @@ async function bootstrap() {
     options: {
       package: 'user',
       protoPath: join(__dirname, '../../proto/user.proto'),
-      url: `${configService.get<string>('NODE_ENV') === 'development' ? 'localhost' : 'user-service'}:50051`,
+      url: `${configService.get<string>('NODE_ENV') === 'development' ? 'localhost' : configService.get<string>('HOSTNAME_USER_SERVICE')}:50051`,
     },
   };
 
