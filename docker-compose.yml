@@ -1,6 +1,13 @@
-version: "3.8"
-
 services:
+  user-service:
+    build:
+      context: .
+      dockerfile: ./users-microservice/Dockerfile
+    container_name: "user-service"
+    ports:
+      - "3000:3000"
+      - "50051:50051"
+
   notification-service:
     build:
       context: .
