@@ -1,4 +1,9 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  OnModuleInit,
+} from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom, Observable } from 'rxjs';
 import {
@@ -8,6 +13,7 @@ import {
 import { users } from './data';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 interface NotificationService {
   sendNotification(data: NotificationRequest): Observable<NotificationResponse>;
@@ -31,8 +37,33 @@ export class UserService implements OnModuleInit {
     return this.notificationService.sendNotification(notificationRequest);
   }
 
-  getById(idUser: string): User | null {
-    return users.find((user) => user.id === idUser) || null;
+  getAll(): User[] {
+    return users;
+  }
+
+  getById(idUser: string): User {
+    const user = users.find((user) => user.id === idUser);
+    if (!user) throw new NotFoundException();
+
+    return user;
+  }
+
+  update({ id, data }: { id: string; data: UpdateUserDto }) {
+    const user = this.getById(id);
+
+    const updatedUser: UpdateUserDto = {
+      ...data,
+    };
+
+    const indexOfUser = users.findIndex((user) => user.id === id);
+
+    users[indexOfUser] = {
+      ...user,
+      ...updatedUser,
+      id: user.id,
+    };
+
+    return users[indexOfUser];
   }
 
   async createUser(createUserDto: CreateUserDto) {

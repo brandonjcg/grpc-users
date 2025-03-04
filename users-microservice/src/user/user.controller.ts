@@ -1,13 +1,22 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import {
   NotificationRequest,
   NotificationResponse,
 } from './interfaces/notification.interface';
 import { CreateUserDto } from './dto/create-user.dto';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @ApiTags('User')
 @Controller('user')
@@ -57,10 +66,24 @@ export class UserController {
     return response;
   }
 
+  @ApiOperation({ summary: 'Get list of users' })
+  @ApiResponse({ status: 200, description: 'List of users' })
+  @Get()
+  getUsers() {
+    return this.userService.getAll();
+  }
+
   @ApiOperation({ summary: 'Create a new user' })
   @ApiResponse({ status: 201, description: 'User created successfully' })
   @Post()
   createUser(@Body() createUserDto: CreateUserDto) {
     return this.userService.createUser(createUserDto);
+  }
+
+  @ApiOperation({ summary: 'Update a user' })
+  @ApiResponse({ status: 200, description: 'User updated successfully' })
+  @Patch(':id')
+  updateUser(@Param('id') id: string, @Body() data: UpdateUserDto) {
+    return this.userService.update({ id, data });
   }
 }

@@ -1,0 +1,5 @@
+- [ ] Implementar RabbitMQ
+- [ ] Implementar interceptor in ambos micros
+- [ ] Implementar unit test
+- [ ] Implementar Dockerizacion en ambos micros
+- [ ] Implementar CI/CD
