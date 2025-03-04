@@ -18,6 +18,15 @@ import { NotificationController } from './notification.controller';
           protoPath: join(__dirname, '../../../proto/notification.proto'),
         },
       },
+      {
+        name: 'USER_PACKAGE',
+        transport: Transport.GRPC,
+        options: {
+          url: 'localhost:50051',
+          package: 'user',
+          protoPath: join(__dirname, '../../../proto/user.proto'),
+        },
+      },
     ]),
   ],
 })

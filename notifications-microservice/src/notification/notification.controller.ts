@@ -4,23 +4,22 @@ import {
   NotificationRequest,
   NotificationResponse,
 } from './notification.interface';
+import { NotificationService } from './notification.service';
 
 @Controller()
 export class NotificationController {
-  constructor() {}
+  constructor(private readonly notificationService: NotificationService) {}
 
   @GrpcMethod('NotificationService', 'SendNotification')
-  sendNotification({
+  async sendNotification({
+    id = '',
     message = '',
-  }: NotificationRequest): NotificationResponse {
-    console.log(
-      `🚀 ${new Date().toLocaleString('en-US', { timeZone: 'America/Tijuana', hour12: false })} ~ notification.controller.ts:19 ~ NotificationController ~ messageFormatted:`,
-      message,
-    );
-    // TODO: creo que aquí falta consultar el micro de user para obtener la info del usuario
+  }: NotificationRequest): Promise<NotificationResponse> {
+    const userInfo = await this.notificationService.getDataOfUserById(id);
+    const newMessage = `Notification sent to ${userInfo.user.name} with message: ${message}`;
     return {
       success: true,
-      message,
+      message: newMessage,
     };
   }
 }
