@@ -10,6 +10,9 @@ services:
     environment:
       - HOSTNAME_USER_SERVICE=user-service
       - HOSTNAME_NOTIFICATION_SERVICE=notification-service
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+    depends_on:
+      - rabbitmq
 
   notification-service:
     build:
@@ -21,3 +24,17 @@ services:
     environment:
       - HOSTNAME_NOTIFICATION_SERVICE=notification-service
       - HOSTNAME_USER_SERVICE=user-service
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+    depends_on:
+      - rabbitmq
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: "rabbitmq"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    restart: unless-stopped
