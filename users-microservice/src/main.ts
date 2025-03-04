@@ -4,6 +4,7 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const globalPrefix = 'api/v1';
@@ -23,14 +24,19 @@ async function bootstrap() {
     customSiteTitle: 'User API Documentation',
   });
 
-  const microservice = app.connectMicroservice<MicroserviceOptions>({
+  const configService = app.get(ConfigService);
+
+  const microserviceOptions: MicroserviceOptions = {
     transport: Transport.GRPC,
     options: {
       package: 'user',
       protoPath: join(__dirname, '../../proto/user.proto'),
-      url: `${process.env.NODE_ENV === 'development' ? 'localhost' : 'user-service'}:50051`,
+      url: `${configService.get<string>('NODE_ENV') === 'development' ? 'localhost' : 'user-service'}:50051`,
     },
-  });
+  };
+
+  const microservice =
+    app.connectMicroservice<MicroserviceOptions>(microserviceOptions);
 
   await microservice
     .listen()
@@ -44,7 +50,7 @@ async function bootstrap() {
   await app
     .listen(3000)
     .then(() => {
-      console.log(`HTTP server is running on http://0.0.0.0:3000 🚀`);
+      console.log(`HTTP server is running on http://127.0.0.1:3000 🚀`);
     })
     .catch((err) => {
       console.error('Error starting the app:', err);
