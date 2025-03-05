@@ -1,9 +1,11 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, HttpAdapterHost } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
+import { AllExceptionsFilter } from './all-exceptions.filter';
 
 async function bootstrap() {
   const globalPrefix = 'api/v1';
@@ -11,6 +13,9 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix(globalPrefix);
   app.useGlobalPipes(new ValidationPipe());
+
+  const { httpAdapter } = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
 
   const config = new DocumentBuilder()
     .setTitle('User documentation')
@@ -23,14 +28,19 @@ async function bootstrap() {
     customSiteTitle: 'User API Documentation',
   });
 
-  const microservice = app.connectMicroservice<MicroserviceOptions>({
+  const configService = app.get(ConfigService);
+
+  const microserviceOptions: MicroserviceOptions = {
     transport: Transport.GRPC,
     options: {
       package: 'user',
       protoPath: join(__dirname, '../../proto/user.proto'),
-      url: `${process.env.NODE_ENV === 'development' ? 'localhost' : 'user-service'}:50051`,
+      url: `${configService.get<string>('NODE_ENV') === 'development' ? 'localhost' : configService.get<string>('HOSTNAME_USER_SERVICE')}:50051`,
     },
-  });
+  };
+
+  const microservice =
+    app.connectMicroservice<MicroserviceOptions>(microserviceOptions);
 
   await microservice
     .listen()
@@ -44,7 +54,9 @@ async function bootstrap() {
   await app
     .listen(3000)
     .then(() => {
-      console.log(`HTTP server is running on http://0.0.0.0:3000 🚀`);
+      console.log(
+        `HTTP server is running on http://127.0.0.1:3000/${globalPrefix} 🚀`,
+      );
     })
     .catch((err) => {
       console.error('Error starting the app:', err);

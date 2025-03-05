@@ -1,6 +1,5 @@
-- [ ] Implementar variables de entorno para docker-compose y puertos en los micros
-- [ ] Implementar RabbitMQ
-- [ ] Implementar interceptor in ambos micros
-- [ ] Implementar unit test
-- [ ] Implementar Dockerizacion en ambos micros
-- [ ] Implementar CI/CD
+- [x] Implementar variables de entorno para docker-compose y puertos en los micros
+- [x] Implementar RabbitMQ
+- [x] Implementar interceptor in ambos micros
+- [x] Implementar Dockerizacion en ambos micros
+- [x] Crear env.template

@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { join } from 'path';
 import { NotificationService } from './notification.service';
@@ -10,24 +10,32 @@ import { NotificationController } from './notification.controller';
   providers: [NotificationService],
   imports: [
     ConfigModule.forRoot(),
-    ClientsModule.register([
+    ClientsModule.registerAsync([
       {
         name: 'NOTIFICATION_PACKAGE',
-        transport: Transport.GRPC,
-        options: {
-          url: `${process.env.NODE_ENV === 'development' ? 'localhost' : 'notification-service'}:50052`,
-          package: 'notification',
-          protoPath: join(__dirname, '../../../proto/notification.proto'),
-        },
+        imports: [ConfigModule],
+        inject: [ConfigService],
+        useFactory: (configService: ConfigService) => ({
+          transport: Transport.GRPC,
+          options: {
+            url: `${configService.get<string>('NODE_ENV') === 'development' ? 'localhost' : configService.get<string>('HOSTNAME_NOTIFICATION_SERVICE')}:50052`,
+            package: 'notification',
+            protoPath: join(__dirname, '../../../proto/notification.proto'),
+          },
+        }),
       },
       {
         name: 'USER_PACKAGE',
-        transport: Transport.GRPC,
-        options: {
-          url: `${process.env.NODE_ENV === 'development' ? 'localhost' : 'user-service'}:50051`,
-          package: 'user',
-          protoPath: join(__dirname, '../../../proto/user.proto'),
-        },
+        imports: [ConfigModule],
+        inject: [ConfigService],
+        useFactory: (configService: ConfigService) => ({
+          transport: Transport.GRPC,
+          options: {
+            url: `${configService.get<string>('NODE_ENV') === 'development' ? 'localhost' : configService.get<string>('HOSTNAME_USER_SERVICE')}:50051`,
+            package: 'user',
+            protoPath: join(__dirname, '../../../proto/user.proto'),
+          },
+        }),
       },
     ]),
   ],
