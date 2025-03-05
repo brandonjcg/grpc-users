@@ -4,3 +4,4 @@
 - [ ] Implementar unit test
 - [x] Implementar Dockerizacion en ambos micros
 - [ ] Implementar CI/CD
+- [ ] Crear env.template

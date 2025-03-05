@@ -4,7 +4,7 @@ import {
   NotFoundException,
   OnModuleInit,
 } from '@nestjs/common';
-import { ClientGrpc } from '@nestjs/microservices';
+import { ClientGrpc, ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom, Observable } from 'rxjs';
 import {
   NotificationRequest,
@@ -23,7 +23,10 @@ interface NotificationService {
 export class UserService implements OnModuleInit {
   private notificationService: NotificationService;
 
-  constructor(@Inject('NOTIFICATION_PACKAGE') private client: ClientGrpc) {}
+  constructor(
+    @Inject('NOTIFICATION_PACKAGE') private client: ClientGrpc,
+    @Inject('RABBITMQ_SERVICE') private readonly clientRabbit: ClientProxy,
+  ) {}
 
   onModuleInit() {
     this.notificationService = this.client.getService<NotificationService>(
@@ -62,6 +65,12 @@ export class UserService implements OnModuleInit {
       ...updatedUser,
       id: user.id,
     };
+
+    this.clientRabbit.emit('user.updated', {
+      id: user.id,
+      message: `User ${user.name} updated`,
+      updateAt: new Date(),
+    });
 
     return users[indexOfUser];
   }

@@ -2,6 +2,7 @@
     "conventionalCommits.scopes": [
         "app",
         "notifications",
-        "users"
+        "users",
+        "docker"
     ]
 }
