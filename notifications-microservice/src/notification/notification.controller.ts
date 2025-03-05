@@ -1,5 +1,10 @@
 import { Controller, Logger } from '@nestjs/common';
-import { EventPattern, GrpcMethod, Payload } from '@nestjs/microservices';
+import {
+  EventPattern,
+  GrpcMethod,
+  Payload,
+  RpcException,
+} from '@nestjs/microservices';
 import {
   NotificationRequest,
   NotificationResponse,
@@ -17,12 +22,19 @@ export class NotificationController {
     id = '',
     message = '',
   }: NotificationRequest): Promise<NotificationResponse> {
-    const userInfo = await this.notificationService.getDataOfUserById(id);
-    const newMessage = `Notification sent to ${userInfo.user.name} with message: ${message}`;
-    return {
-      success: true,
-      message: newMessage,
-    };
+    try {
+      const userInfo = await this.notificationService.getDataOfUserById(id);
+      const newMessage = `Notification sent to ${userInfo.user.name} with message: ${message}`;
+      return {
+        success: true,
+        message: newMessage,
+      };
+    } catch (error) {
+      throw new RpcException({
+        code: 14,
+        message: (error as Error).message,
+      });
+    }
   }
 
   @EventPattern('user.updated')
