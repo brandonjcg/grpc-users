@@ -8,8 +8,8 @@ import {
   Query,
 } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
-import { firstValueFrom } from 'rxjs';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { firstValueFrom } from 'rxjs';
 import { UserService } from './user.service';
 import {
   NotificationRequest,
@@ -17,6 +17,7 @@ import {
 } from './interfaces/notification.interface';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './entities/user.entity';
 
 @ApiTags('User')
 @Controller('user')
@@ -66,10 +67,25 @@ export class UserController {
     return response;
   }
 
+  @ApiOperation({
+    summary: 'Get a user by id',
+    description: 'Retrieve a user by id.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'User found successfully',
+  })
+  @Get(':id')
+  getUserById(@Param('id') id: string): User {
+    const user = this.userService.getById(id);
+
+    return user;
+  }
+
   @ApiOperation({ summary: 'Get list of users' })
   @ApiResponse({ status: 200, description: 'List of users' })
   @Get()
-  getUsers() {
+  getUsers(): User[] {
     return this.userService.getAll();
   }
 
