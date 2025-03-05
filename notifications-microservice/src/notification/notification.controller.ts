@@ -1,5 +1,5 @@
-import { Controller } from '@nestjs/common';
-import { GrpcMethod } from '@nestjs/microservices';
+import { Controller, Logger } from '@nestjs/common';
+import { EventPattern, GrpcMethod, Payload } from '@nestjs/microservices';
 import {
   NotificationRequest,
   NotificationResponse,
@@ -8,6 +8,8 @@ import { NotificationService } from './notification.service';
 
 @Controller()
 export class NotificationController {
+  private readonly logger = new Logger('Notifications');
+
   constructor(private readonly notificationService: NotificationService) {}
 
   @GrpcMethod('NotificationService', 'SendNotification')
@@ -21,5 +23,10 @@ export class NotificationController {
       success: true,
       message: newMessage,
     };
+  }
+
+  @EventPattern('user.updated')
+  handleUserUpdates(@Payload() message: any) {
+    this.logger.log(`Received message: ${JSON.stringify(message)}`);
   }
 }

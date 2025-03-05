@@ -1,5 +1,5 @@
 - [x] Implementar variables de entorno para docker-compose y puertos en los micros
-- [ ] Implementar RabbitMQ
+- [x] Implementar RabbitMQ
 - [ ] Implementar interceptor in ambos micros
 - [ ] Implementar unit test
 - [x] Implementar Dockerizacion en ambos micros

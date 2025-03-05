@@ -29,7 +29,7 @@ import { rabbitMQConfig } from '../config/rabbitmq.options';
         inject: [ConfigService],
         useFactory: (configService: ConfigService) =>
           rabbitMQConfig({
-            queue: 'user_updates',
+            queue: 'notification-service',
             url: configService.get<string>('RABBITMQ_URL'),
           }),
       },

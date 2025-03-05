@@ -4,7 +4,6 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { join } from 'path';
 import { NotificationService } from './notification.service';
 import { NotificationController } from './notification.controller';
-import { rabbitMQConfig } from '../config/rabbitmq.options';
 
 @Module({
   controllers: [NotificationController],
@@ -37,16 +36,6 @@ import { rabbitMQConfig } from '../config/rabbitmq.options';
             protoPath: join(__dirname, '../../../proto/user.proto'),
           },
         }),
-      },
-      {
-        name: 'RABBITMQ_SERVICE',
-        imports: [ConfigModule],
-        inject: [ConfigService],
-        useFactory: (configService: ConfigService) =>
-          rabbitMQConfig({
-            queue: 'user_updates',
-            url: configService.get<string>('RABBITMQ_URL'),
-          }),
       },
     ]),
   ],
