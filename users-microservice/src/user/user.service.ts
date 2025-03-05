@@ -12,8 +12,7 @@ import {
 } from './interfaces/notification.interface';
 import { users } from './data';
 import { User } from './entities/user.entity';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateUserDto, CreateUserDto } from './dto/user.dto';
 
 interface NotificationService {
   sendNotification(data: NotificationRequest): Observable<NotificationResponse>;

@@ -39,6 +39,8 @@ export class NotificationController {
 
   @EventPattern('user.updated')
   handleUserUpdates(@Payload() message: any) {
-    this.logger.log(`Received message: ${JSON.stringify(message)}`);
+    this.logger.log(
+      `Message received through RabbitMQ: ${JSON.stringify(message)}`,
+    );
   }
 }

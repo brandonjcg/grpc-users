@@ -4,7 +4,6 @@ package user;
 
 service UserService {
   rpc GetUserById (GetUserRequest) returns (GetUserResponse);
-  rpc CreateUser (UserToCreate) returns (GetUserResponse);
 }
 
 message GetUserRequest {

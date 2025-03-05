@@ -15,9 +15,8 @@ import {
   NotificationRequest,
   NotificationResponse,
 } from './interfaces/notification.interface';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import { CreateUserDto, NotifyUserDto, UpdateUserDto } from './dto/user.dto';
 
 @ApiTags('User')
 @Controller('user')
@@ -53,11 +52,11 @@ export class UserController {
   @Get(':id/notify')
   async notifyUser(
     @Param('id') id: string,
-    @Query('message') message: string,
+    @Query() params: NotifyUserDto,
   ): Promise<NotificationResponse> {
     const notificationRequest: NotificationRequest = {
       id,
-      message,
+      message: params.message,
     };
 
     const response = await firstValueFrom(

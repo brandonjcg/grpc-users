@@ -54,7 +54,9 @@ async function bootstrap() {
   await app
     .listen(3000)
     .then(() => {
-      console.log(`HTTP server is running on http://127.0.0.1:3000 🚀`);
+      console.log(
+        `HTTP server is running on http://127.0.0.1:3000/${globalPrefix} 🚀`,
+      );
     })
     .catch((err) => {
       console.error('Error starting the app:', err);
